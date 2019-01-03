@@ -24,7 +24,7 @@
       recommendedGzipSettings = true;
       recommendedProxySettings = true;
       virtualHosts = {
-        "hydra.holo.yflower.de" = {
+        "hydra.holo.host" = {
           addSSL = true;
           enableACME = true;
           locations = {
