@@ -67,7 +67,7 @@
   };
 
   networking.firewall.allowedTCPPorts = [ 80 443 22 ];
-
+  nixpkgs.config.allowUnfree = true;
   nix.buildMachines = [
     {
       hostName = "localhost";
@@ -75,9 +75,19 @@
       supportedFeatures = ["kvm" "nixos-test" "big-parallel" "benchmark"];
       maxJobs = 2;
     }
+    {
+      hostName = "nanobuild.holo.host";
+      sshKey = "/root/.ssh/id_rsa";
+      sshUser = "nanobuild";
+      system   = "aarch64-linux";
+      supportedFeatures = ["kvm" "nixos-test" "big-parallel" "benchmark"];
+      maxJobs = 2;
+    }
+
   ];
 
   nix.gc.automatic = true;
   nix.gc.dates = "*:0/30";
   nix.gc.options = ''--max-freed "$((15 * 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
+  time.timeZone = "America/Detroit";
 }
