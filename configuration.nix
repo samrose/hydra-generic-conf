@@ -1,4 +1,4 @@
-{ config,lib, pkgs, ... }:
+{ config, lib, pkgs, options, ... }:
 {
   imports = [ <nixpkgs/nixos/modules/virtualisation/amazon-image.nix> ];
 
@@ -24,7 +24,7 @@
       recommendedGzipSettings = true;
       recommendedProxySettings = true;
       virtualHosts = {
-        "hydra.holo.host" = {
+        "hydra.holo.yflower.de" = {
           addSSL = true;
           enableACME = true;
           locations = {
@@ -68,6 +68,14 @@
 
   networking.firewall.allowedTCPPorts = [ 80 443 22 ];
   nixpkgs.config.allowUnfree = true;
+  environment.etc = pkgs.lib.singleton {
+    target = "nix/id_rsa";
+    source = /root/.ssh/id_rsa;
+    uid = config.ids.uids.hydra;
+    gid = config.ids.gids.hydra;
+    mode = "0440";
+  };
+  nix.distributedBuilds = true;
   nix.buildMachines = [
     {
       hostName = "localhost";
@@ -77,7 +85,7 @@
     }
     {
       hostName = "nanobuild.holo.host";
-      sshKey = "/root/.ssh/id_rsa";
+      sshKey = "/etc/nix/id_rsa";
       sshUser = "nanobuild";
       system   = "aarch64-linux";
       supportedFeatures = ["kvm" "nixos-test" "big-parallel" "benchmark"];
@@ -90,4 +98,9 @@
   nix.gc.dates = "*:0/30";
   nix.gc.options = ''--max-freed "$((15 * 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
   time.timeZone = "America/Detroit";
+  nix.nixPath =
+    # Prepend default nixPath values.
+    options.nix.nixPath.default ++ 
+    # Append our nixpkgs-overlays
+    [ "nixpkgs-overlays=/etc/nixos/overlays-compat/" ];
 }
