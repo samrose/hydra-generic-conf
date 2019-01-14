@@ -73,7 +73,7 @@
     source = /root/.ssh/id_rsa;
     uid = config.ids.uids.hydra;
     gid = config.ids.gids.hydra;
-    mode = "0440";
+    mode = "0400";
   };
   nix.distributedBuilds = true;
   nix.buildMachines = [
@@ -98,9 +98,4 @@
   nix.gc.dates = "*:0/30";
   nix.gc.options = ''--max-freed "$((15 * 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
   time.timeZone = "America/Detroit";
-  nix.nixPath =
-    # Prepend default nixPath values.
-    options.nix.nixPath.default ++ 
-    # Append our nixpkgs-overlays
-    [ "nixpkgs-overlays=/etc/nixos/overlays-compat/" ];
 }
