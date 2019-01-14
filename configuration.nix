@@ -7,7 +7,7 @@
   services = {
     hydra = {
       enable = true;
-      hydraURL = "http://ec2-13-58-169-56.us-east-2.compute.amazonaws.com"; # externally visible URL
+      hydraURL = "http://holoportbuild.holo.host"; # externally visible URL
       notificationSender = "hydra@holo.host"; # e-mail of hydra service
       # a standalone hydra will require you to unset the buildMachinesFiles list to avoid using a nonexistant /etc/nix/machines
 
