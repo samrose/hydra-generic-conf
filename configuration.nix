@@ -93,6 +93,9 @@
     }
 
   ];
+  nix.extraOptions = ''
+    allowed-uris = https://
+  '';
 
   nix.gc.automatic = true;
   nix.gc.dates = "*:0/30";
