@@ -68,26 +68,18 @@
 
   networking.firewall.allowedTCPPorts = [ 80 443 22 ];
   nixpkgs.config.allowUnfree = true;
-  environment.etc = pkgs.lib.singleton {
-    target = "nix/id_rsa";
-    source = /root/.ssh/id_rsa;
-    uid = config.ids.uids.hydra;
-    gid = config.ids.gids.hydra;
-    mode = "0400";
-  };
+  #environment.etc = pkgs.lib.singleton {
+  #  target = "nix/id_rsa";
+  #  source = /root/.ssh/id_rsa;
+  #  uid = config.ids.uids.hydra;
+  #  gid = config.ids.gids.hydra;
+  #  mode = "0400";
+  #};
   nix.distributedBuilds = true;
   nix.buildMachines = [
     {
       hostName = "localhost";
       system = "x86_64-linux";
-      supportedFeatures = ["kvm" "nixos-test" "big-parallel" "benchmark"];
-      maxJobs = 2;
-    }
-    {
-      hostName = "nanobuild.holo.host";
-      sshKey = "/etc/nix/id_rsa";
-      sshUser = "nanobuild";
-      system   = "aarch64-linux";
       supportedFeatures = ["kvm" "nixos-test" "big-parallel" "benchmark"];
       maxJobs = 2;
     }
